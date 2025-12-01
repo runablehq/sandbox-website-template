@@ -1,5 +1,10 @@
+import { Route } from "wouter";
+import Index from "./pages/index";
+
 function App() {
-	return (<div>Runable is working</div>);
+	return (
+		<Route path="/" component={Index} />
+	);
 }
 
 export default App;
