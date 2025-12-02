@@ -502,6 +502,72 @@ const GITIGNORE_ADDITIONS = `# Environment variables
 *.db-shm
 *.db-wal`;
 
+interface RouteToAdd {
+    path: string;
+    componentName: string;
+    importPath: string;
+}
+
+const AUTH_ROUTES_TO_ADD: RouteToAdd[] = [
+    { path: '/signin', componentName: 'SignIn', importPath: './pages/sign-in' },
+    { path: '/signup', componentName: 'SignUp', importPath: './pages/sign-up' },
+];
+
+async function updateAppTsx(appTsxPath: string) {
+    const content = await readFile(appTsxPath, 'utf-8');
+
+    const routesToAdd = AUTH_ROUTES_TO_ADD.filter(route => {
+        const hasImport = content.includes(`import ${route.componentName} from`);
+        const hasRoute = content.includes(`path="${route.path}"`);
+        return !hasImport || !hasRoute;
+    });
+
+    if (routesToAdd.length === 0) {
+        console.log('app.tsx already has all auth routes');
+        return;
+    }
+
+    const importsToAdd = routesToAdd
+        .filter(route => !content.includes(`import ${route.componentName} from`));
+
+    const routeEntriesToAdd = routesToAdd
+        .filter(route => !content.includes(`path="${route.path}"`));
+
+    // Detect indentation from existing Route elements
+    const existingRouteMatch = content.match(/^(\s*)<Route /m);
+    const routeIndent = existingRouteMatch ? existingRouteMatch[1] : '\t\t\t';
+
+    const newImports = importsToAdd
+        .map(route => `import ${route.componentName} from "${route.importPath}";`)
+        .join('\n');
+
+    const newRoutes = routeEntriesToAdd
+        .map(route => `${routeIndent}<Route path="${route.path}" component={${route.componentName}} />`)
+        .join('\n');
+
+    // Find the last import line and add new imports after it
+    const lines = content.split('\n');
+    const lastImportIndex = lines.reduce((lastIdx, line, idx) =>
+        /^import .+ from .+;?\s*$/.test(line) ? idx : lastIdx
+    , -1);
+
+    // Insert new imports after the last import
+    const contentWithImports = (newImports && lastImportIndex >= 0)
+        ? [...lines.slice(0, lastImportIndex + 1), newImports, ...lines.slice(lastImportIndex + 1)].join('\n')
+        : content;
+
+    // Insert new routes before </Switch>
+    const updatedContent = newRoutes
+        ? contentWithImports.replace(
+            /(\n?)(\t*)(<\/Switch>)/,
+            `\n${newRoutes}\n$2$3`
+        )
+        : contentWithImports;
+
+    await writeFile(appTsxPath, updatedContent);
+    console.log('Updated app.tsx with auth routes');
+}
+
 function createPackageJsonUpdates() {
     return {
         dependencies: {
@@ -569,6 +635,14 @@ async function main() {
     console.log('Created auth and database files');
     console.log('Created sign-in and sign-up pages');
     console.log('Updated README.md');
+
+    // Update app.tsx with new routes (preserves existing routes)
+    const appTsxPath = join(projectRoot, 'src', 'web', 'app.tsx');
+    if (existsSync(appTsxPath)) {
+        await updateAppTsx(appTsxPath);
+    } else {
+        console.log('Warning: app.tsx not found, skipping route updates');
+    }
 
     // Update .gitignore
     const gitignorePath = join(projectRoot, '.gitignore');
