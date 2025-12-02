@@ -1,9 +1,11 @@
-import { Route } from "wouter";
+import { Route, Switch } from "wouter";
 import Index from "./pages/index";
 
 function App() {
 	return (
-		<Route path="/" component={Index} />
+		<Switch>
+			<Route path="/" component={Index} />
+		</Switch>
 	);
 }
 

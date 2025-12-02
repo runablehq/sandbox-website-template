@@ -164,14 +164,14 @@ app.route('/', authRoutes);
 export default app;`;
 
 const SIGNIN_PAGE = `import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -190,7 +190,7 @@ export default function SignIn() {
         throw new Error(data.message || 'Sign in failed');
       }
 
-      navigate('/');
+      setLocation('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -283,7 +283,7 @@ export default function SignIn() {
 }`;
 
 const SIGNUP_PAGE = `import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -291,7 +291,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -310,7 +310,7 @@ export default function SignUp() {
         throw new Error(data.message || 'Sign up failed');
       }
 
-      navigate('/');
+      setLocation('/');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
