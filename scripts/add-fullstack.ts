@@ -33,6 +33,15 @@ function createFullStackWranglerConfig({ name }: CreateFullStackWranglerConfigOp
     };
 }
 
+const TSCONFIG_WORKER = `{
+	"extends": "./tsconfig.node.json",
+	"compilerOptions": {
+		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.worker.tsbuildinfo",
+		"types": ["vite/client", "./worker-configuration.d.ts"]
+	},
+	"include": ["src/api"]
+}`;
+
 const DRIZZLE_CONFIG = `import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
@@ -644,12 +653,33 @@ async function main() {
         console.log('Warning: app.tsx not found, skipping route updates');
     }
 
+    // Create tsconfig.worker.json
+    await writeFile(join(projectRoot, 'tsconfig.worker.json'), TSCONFIG_WORKER);
+    console.log('Created tsconfig.worker.json');
+
+    // Update tsconfig.json to include worker reference
+    const tsconfigPath = join(projectRoot, 'tsconfig.json');
+    const tsconfig = JSON.parse(await readFile(tsconfigPath, 'utf-8'));
+    const workerRef = { path: './tsconfig.worker.json' };
+    const hasWorkerRef = tsconfig.references?.some(
+        (ref: { path: string }) => ref.path === './tsconfig.worker.json'
+    );
+    if (!hasWorkerRef) {
+        tsconfig.references = [...(tsconfig.references ?? []), workerRef];
+        tsconfig.compilerOptions = {
+            ...tsconfig.compilerOptions,
+            types: ['./worker-configuration.d.ts', 'node']
+        };
+        await writeFile(tsconfigPath, JSON.stringify(tsconfig, null, '\t'));
+        console.log('Updated tsconfig.json');
+    }
+
     // Update .gitignore
     const gitignorePath = join(projectRoot, '.gitignore');
-    const existingGitignore = existsSync(gitignorePath) 
-        ? await readFile(gitignorePath, 'utf-8') 
+    const existingGitignore = existsSync(gitignorePath)
+        ? await readFile(gitignorePath, 'utf-8')
         : '';
-    
+
     if (!existingGitignore.includes('.env')) {
         await writeFile(gitignorePath, existingGitignore + GITIGNORE_ADDITIONS);
         console.log('Updated .gitignore');
