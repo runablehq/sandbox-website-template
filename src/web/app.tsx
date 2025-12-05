@@ -1,11 +1,15 @@
 import { Route, Switch } from "wouter";
+import { SiteMetadata } from "./components/site-metadata";
 import Index from "./pages/index";
 
 function App() {
 	return (
-		<Switch>
-			<Route path="/" component={Index} />
-		</Switch>
+		<>
+			<SiteMetadata />
+			<Switch>
+				<Route path="/" component={Index} />
+			</Switch>
+		</>
 	);
 }
 
