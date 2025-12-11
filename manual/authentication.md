@@ -1,6 +1,6 @@
 # Setup Authentication
 
-We are using [Better Auth](https://www.better-auth.com/llms.txt) for authentication. You can read fetch and go through the docs whenever you want to customize or add something that's not documented below.
+We are using [Better Auth](https://www.better-auth.com/llms.txt) for authentication. You can fetch and go through the docs whenever you want to customize or add something that's not documented below.
 
 ## Database Schema
 1. Run the following command to setup database schema for the authentication from the project root.
@@ -26,12 +26,6 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-  },
-  socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    },
   },
   plugins: [
     autumn()
@@ -91,7 +85,6 @@ Add the following sign-in page at `src/web/pages/sign-in.tsx` file.
 ```tsx
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'wouter';
-import { FaGoogle as GoogleIcon } from 'react-icons/fa';
 import { authClient } from '../lib/auth';
 
 interface SignInForm {
@@ -139,12 +132,6 @@ export default function SignIn() {
         </button>
 
         <div>
-          <button type="button" onClick={() => authClient.signIn.social({ provider: 'google' })}>
-            <GoogleIcon /> Sign in with Google
-          </button>
-        </div>
-
-        <div>
           <a href="/sign-up">Don't have an account? Sign up</a>
         </div>
       </form>
@@ -153,12 +140,45 @@ export default function SignIn() {
 }
 ```
 
+## Routes
+Add the auth routes to your router in `src/web/app.tsx`:
+```tsx
+import SignIn from "./pages/sign-in";
+import SignUp from "./pages/sign-up";
+
+// Inside your Switch component:
+<Route path="/sign-in" component={SignIn} />
+<Route path="/sign-up" component={SignUp} />
+```
+
+## API Routes
+Add the auth routes to your API in `src/api/index.ts`:
+```ts
+import { authRoutes } from './routes/auth';
+import { authMiddleware } from './middleware/auth';
+
+// Apply middleware before routes
+app.use(authMiddleware)
+app.route('/', authRoutes);
+```
+
+Create the auth routes file at `src/api/routes/auth.ts`:
+```ts
+import { Hono } from 'hono';
+import { auth } from '../auth';
+
+export const authRoutes = new Hono();
+
+authRoutes.all('/auth/*', async (c) => {
+  return auth.handler(c.req.raw);
+});
+```
+
 ## Sign Up Page
 Add the following sign-up page at `src/web/pages/sign-up.tsx` file.
 ```tsx
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'wouter';
-import { FaGoogle as GoogleIcon } from 'react-icons/fa';
 import { authClient } from '../lib/auth';
 
 interface SignUpForm {
@@ -213,12 +233,6 @@ export default function SignUp() {
         </button>
 
         <div>
-          <button type="button" onClick={() => authClient.signIn.social({ provider: 'google' })}>
-            <GoogleIcon /> Sign up with Google
-          </button>
-        </div>
-
-        <div>
           <a href="/sign-in">Already have an account? Sign in</a>
         </div>
       </form>
@@ -226,3 +240,8 @@ export default function SignUp() {
   );
 }
 ```
+
+## Environment Variables
+These environment variables are already present in `.env` and can be used directly.
+- `BETTER_AUTH_SECRET`
+- `VITE_BASE_URL`
