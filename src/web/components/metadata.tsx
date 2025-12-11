@@ -1,6 +1,6 @@
 import siteConfig from "../../../website.config.json";
 
-export function SiteMetadata() {
+export function Metadata() {
 	return (
 		<>
 			<title>{siteConfig.name}</title>
