@@ -33,7 +33,7 @@ export const auth = betterAuth({
     autumn()
   ],
   secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.VITE_BASE_URL,
+  baseURL: process.env.VITE_BETTER_AUTH_URL,
 });
 ```
 
