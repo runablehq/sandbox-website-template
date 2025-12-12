@@ -251,8 +251,3 @@ export default function SignUp() {
   );
 }
 ```
-
-## Environment Variables
-These environment variables are already present in `.env` and can be used directly.
-- `BETTER_AUTH_SECRET`
-- `VITE_BASE_URL`

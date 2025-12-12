@@ -110,7 +110,7 @@ function MessagePart({ part }: { part: UIMessage["parts"][number] }) {
     }
     // Tool parts are named "tool-{toolName}" - add cases for each tool
     if (part.type === "tool-calculate") {
-        return <CalculateTool part={part as unknown as CalculateToolResult} />
+        return <CalculateTool tool={part as unknown as CalculateToolResult} />
     }
     return null
 }
@@ -172,8 +172,3 @@ export type CalculateToolResult = UIToolInvocation<typeof calculate>
 2. Import in chat.tsx: `import type { MyToolResult } from "../../api/agent/my-tool"`
 3. Create a component to render the tool output (follow `CalculateTool` pattern)
 4. Add case in `MessagePart` for `part.type === "tool-{toolName}"`
-
-## Environment Variables
-These environment variables are already present in `.env` and can be used directly.
-- `AI_GATEWAY_BASE_URL`
-- `AI_GATEWAY_API_KEY`

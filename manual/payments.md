@@ -171,7 +171,3 @@ await autumn.usage({
 ```
 
 Note: This overwrites the current usage value rather than incrementing it.
-
-## Environment Variables
-These environment variables are already present in `.env` and can be used directly.
-- `AUTUMN_SECRET_KEY`
