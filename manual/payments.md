@@ -7,10 +7,10 @@ Wrap your app with the AutumnProvider in `src/web/components/provider.tsx`:
 
 ```tsx
 import { AutumnProvider } from "autumn-js/react";
-
+import { env } from "cloudflare:workers";
 export function Provider({ children }: { children: React.ReactNode }) {
   return (
-    <AutumnProvider betterAuthUrl={import.meta.env.VITE_BASE_URL}>
+    <AutumnProvider betterAuthUrl={env.VITE_BASE_URL}>
       {children}
     </AutumnProvider>
   );
@@ -82,6 +82,95 @@ export default {
   features: [messages],
 };
 ```
+
+## Frontend Usage
+
+### Access Customer Data
+Use the `useCustomer` hook to access customer/subscription info:
+
+```tsx
+import { useCustomer } from "autumn-js/react";
+
+function MyComponent() {
+  const { customer } = useCustomer();
+  console.log("Autumn customer:", customer);
+  return <div>Welcome!</div>;
+}
+```
+
+### Checkout Dialog
+Use `checkout` with `CheckoutDialog` to let users purchase a plan:
+
+```tsx
+import { useCustomer, CheckoutDialog } from "autumn-js/react";
+
+function PurchaseButton() {
+  const { checkout } = useCustomer();
+
+  return (
+    <button
+      onClick={async () => {
+        await checkout({
+          productId: "pro",
+          dialog: CheckoutDialog,
+        });
+      }}
+    >
+      Select Pro Plan
+    </button>
+  );
+}
+```
+
+## Backend Usage
+
+### Check Feature Access
+Use the Autumn SDK to check if a user has access to a feature:
+
+```typescript
+import { Autumn } from "autumn-js";
+
+const autumn = new Autumn({
+  secretKey: process.env.AUTUMN_SECRET_KEY,
+});
+
+const { data } = await autumn.check({
+  customer_id: "user_id_from_auth",
+  feature_id: "messages",
+  required_balance: 1,
+});
+
+if (!data.allowed) {
+  console.log("User has run out of messages");
+  return;
+}
+```
+
+### Track Usage
+Use `autumn.track()` to record consumable usage (AI messages, credits, API calls):
+
+```typescript
+await autumn.track({
+  customer_id: "user_id_from_auth",
+  feature_id: "messages",
+  value: 1,
+});
+```
+
+You can send negative values to increase balance (e.g., when refunding or adjusting limits).
+
+### Set Usage Directly
+Use `autumn.usage()` for non-consumable features (seats, workspaces) where you want to set the absolute value:
+
+```typescript
+await autumn.usage({
+  customer_id: "user_id_from_auth",
+  feature_id: "seats",
+  value: 3,
+});
+```
+
+Note: This overwrites the current usage value rather than incrementing it.
 
 ## Environment Variables
 These environment variables are already present in `.env` and can be used directly.

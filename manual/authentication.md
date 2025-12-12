@@ -2,6 +2,17 @@
 
 We are using [Better Auth](https://www.better-auth.com/llms.txt) for authentication. You can fetch and go through the docs whenever you want to customize or add something that's not documented below.
 
+## Codemod (recommended)
+Run this from the project root to scaffold everything in this doc:
+
+`bun run codemod:authentication`
+
+Options:
+- `--dry-run` to preview changes without writing files
+- `--force` to overwrite existing auth-related files
+
+The codemod prints next steps (schema generation, migrations) and customization tips.
+
 ## Database Schema
 1. Run the following command to setup database schema for the authentication from the project root.
 

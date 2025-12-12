@@ -83,6 +83,96 @@ agentRoutes.post("/messages", async (c) => {
 })
 ```
 
+## Frontend Integration
+
+Add the chat page at `src/web/pages/chat.tsx`:
+
+```tsx
+import { useChat } from "@ai-sdk/react"
+import { DefaultChatTransport, type UIMessage } from "ai"
+import { useState } from "react"
+import type { CalculateToolResult } from "../../api/agent/calculate-tool"
+
+function CalculateTool({ tool }: { tool: CalculateToolResult }) {
+    if (tool.state !== "output-available") {
+        return <div>Calculating...</div>
+    }
+    return (
+        <div className="rounded-lg border p-4">
+            <p className="font-mono">{tool.output}</p>
+        </div>
+    )
+}
+
+function MessagePart({ part }: { part: UIMessage["parts"][number] }) {
+    if (part.type === "text") {
+        return <span>{part.text}</span>
+    }
+    // Tool parts are named "tool-{toolName}" - add cases for each tool
+    if (part.type === "tool-calculate") {
+        return <CalculateTool part={part as unknown as CalculateToolResult} />
+    }
+    return null
+}
+
+function Chat() {
+    const { messages, sendMessage, status } = useChat({
+        transport: new DefaultChatTransport({ api: "/api/agent/messages" }),
+    })
+    const [input, setInput] = useState("")
+    const isLoading = status === "streaming" || status === "submitted"
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!input.trim()) return
+        sendMessage({ text: input })
+        setInput("")
+    }
+
+    return (
+        <div className="flex flex-col h-screen max-w-3xl mx-auto">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                {messages.map((message) => (
+                    <div key={message.id} className={message.role === "user" ? "text-right" : ""}>
+                        {message.parts.map((part, i) => <MessagePart key={i} part={part} />)}
+                    </div>
+                ))}
+            </div>
+            <form onSubmit={handleSubmit} className="border-t p-4 flex gap-2">
+                <input
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Ask something..."
+                    className="flex-1 border rounded px-3 py-2"
+                    disabled={isLoading}
+                />
+                <button type="submit" disabled={isLoading || !input.trim()}>Send</button>
+            </form>
+        </div>
+    )
+}
+
+export default Chat
+```
+
+### Exporting Tool Result Types
+In each tool file, export the result type for frontend use:
+
+```typescript
+// At the end of src/api/agent/calculate-tool.ts
+import { tool, UIToolInvocation } from "ai"
+
+export const calculate = tool({ /* ...tool definition */ })
+
+export type CalculateToolResult = UIToolInvocation<typeof calculate>
+```
+
+### Adding New Tools to Frontend
+1. Export type from tool file: `export type MyToolResult = UIToolInvocation<typeof myTool>`
+2. Import in chat.tsx: `import type { MyToolResult } from "../../api/agent/my-tool"`
+3. Create a component to render the tool output (follow `CalculateTool` pattern)
+4. Add case in `MessagePart` for `part.type === "tool-{toolName}"`
+
 ## Environment Variables
 These environment variables are already present in `.env` and can be used directly.
 - `AI_GATEWAY_BASE_URL`
