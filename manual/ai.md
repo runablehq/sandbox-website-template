@@ -1,6 +1,17 @@
 # Setup AI Agent
 
-We are using the [AI SDK](https://v6.ai-sdk.dev/docs/foundations/overview) with OpenAI-compatible endpoints for building AI agents.
+We are using the [AI SDK](https://v6.ai-sdk.dev) with OpenAI-compatible endpoints for building AI agents.
+
+## Supported Models
+- `anthropic/claude-sonnet-4.5`
+- `anthropic/claude-haiku-4.5`
+- `anthropic/claude-opus-4.5`
+- `openai/gpt-5.2`
+- `openai/gpt-5-nano`
+- `openai/gpt-5-mini`
+- `google/gemini-3-pro-preview`
+- `google/gemini-3-pro-image`
+- `google/gemini-2.5-flash-image`
 
 ## Agent Config
 Add the following agent config at `src/api/agent/index.ts` file.
@@ -33,12 +44,13 @@ export const agent = new ToolLoopAgent({
 ```
 
 ## Tools
-Add tools in the `src/api/agent/` directory. Here's an example calculator tool at `src/api/agent/calculate-tool.ts`:
+Add tools in the `src/api/agent/` directory. Below is an example calculator tool showing the full pattern including backend definition, type export, and frontend component.
 
+**Backend Tool (`src/api/agent/calculate-tool.ts`):**
 ```typescript
 import z from "zod"
 import { evaluate } from "mathjs"
-import { tool } from "ai"
+import { tool, UIToolInvocation } from "ai"
 
 export const calculate = tool({
     description: "Calculate a mathematical expression.",
@@ -54,7 +66,33 @@ export const calculate = tool({
         }
     }
 })
+
+// Export type for frontend use
+export type CalculateToolResult = UIToolInvocation<typeof calculate>
 ```
+
+**Frontend Component (in chat page):**
+```tsx
+import type { CalculateToolResult } from "../../api/agent/calculate-tool"
+
+function CalculateTool({ tool }: { tool: CalculateToolResult }) {
+    if (tool.state !== "output-available") {
+        return <div>Calculating...</div>
+    }
+    return (
+        <div className="rounded-lg border p-4">
+            <p className="font-mono">{tool.output}</p>
+        </div>
+    )
+}
+```
+
+### Adding New Tools
+1. Create tool file in `src/api/agent/` with tool definition
+2. Export type: `export type MyToolResult = UIToolInvocation<typeof myTool>`
+3. Import tool in agent config and add to `tools` object
+4. Create frontend component to render tool output (follow `CalculateTool` pattern)
+5. Add case in `MessagePart` for `part.type === "tool-{toolName}"`
 
 ## API Routes
 Add the agent routes to your API in `src/api/index.ts`:
@@ -92,17 +130,6 @@ import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport, type UIMessage } from "ai"
 import { useState } from "react"
 import type { CalculateToolResult } from "../../api/agent/calculate-tool"
-
-function CalculateTool({ tool }: { tool: CalculateToolResult }) {
-    if (tool.state !== "output-available") {
-        return <div>Calculating...</div>
-    }
-    return (
-        <div className="rounded-lg border p-4">
-            <p className="font-mono">{tool.output}</p>
-        </div>
-    )
-}
 
 function MessagePart({ part }: { part: UIMessage["parts"][number] }) {
     if (part.type === "text") {
@@ -154,21 +181,3 @@ function Chat() {
 
 export default Chat
 ```
-
-### Exporting Tool Result Types
-In each tool file, export the result type for frontend use:
-
-```typescript
-// At the end of src/api/agent/calculate-tool.ts
-import { tool, UIToolInvocation } from "ai"
-
-export const calculate = tool({ /* ...tool definition */ })
-
-export type CalculateToolResult = UIToolInvocation<typeof calculate>
-```
-
-### Adding New Tools to Frontend
-1. Export type from tool file: `export type MyToolResult = UIToolInvocation<typeof myTool>`
-2. Import in chat.tsx: `import type { MyToolResult } from "../../api/agent/my-tool"`
-3. Create a component to render the tool output (follow `CalculateTool` pattern)
-4. Add case in `MessagePart` for `part.type === "tool-{toolName}"`

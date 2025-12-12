@@ -2,6 +2,8 @@
 
 We are using [Autumn](https://useautumn.com) for payments and usage tracking.
 
+You can fetch documentation at [llms.txt](https://docs.useautumn.com/llms.txt). Explore the documentation if something is not explained below.
+
 ## Provider Setup
 Wrap your app with the AutumnProvider in `src/web/components/provider.tsx`:
 

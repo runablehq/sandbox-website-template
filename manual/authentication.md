@@ -1,17 +1,8 @@
 # Setup Authentication
 
-We are using [Better Auth](https://www.better-auth.com/llms.txt) for authentication. You can fetch and go through the docs whenever you want to customize or add something that's not documented below.
+We are using [Better Auth](https://www.better-auth.com) for authentication.
 
-## Codemod (recommended)
-Run this from the project root to scaffold everything in this doc:
-
-`bun run codemod:authentication`
-
-Options:
-- `--dry-run` to preview changes without writing files
-- `--force` to overwrite existing auth-related files
-
-The codemod prints next steps (schema generation, migrations) and customization tips.
+You can fetch documentation at [llms.txt](https://www.better-auth.com/llms.txt). Explore the documentation if something is not explained below.
 
 ## Database Schema
 1. Run the following command to setup database schema for the authentication from the project root.
@@ -52,6 +43,7 @@ Add the following middleware at `src/api/middleware/authentication.ts` file.
 import { createMiddleware } from "hono/factory";
 import { auth } from "../auth";
 
+// Attaches session and user if they are authenticated in the hono context.
 export const authMiddleware = createMiddleware(async (c, next) => {
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
   if (!session) {
@@ -64,6 +56,7 @@ export const authMiddleware = createMiddleware(async (c, next) => {
   return next();
 });
 
+// Use this middleware to protect routes such as only authenticated users can access them.
 export const authenticatedOnly = createMiddleware(
   async (c, next) => {
     const session = c.get("session");
@@ -91,8 +84,14 @@ export const authClient = createAuthClient({
 })
 ```
 
-## Sign In Page
-Add the following sign-in page at `src/web/pages/sign-in.tsx` file.
+## Authentication Pages
+
+### Sign In & Sign Up
+Add sign-in page at `src/web/pages/sign-in.tsx` and sign-up page at `src/web/pages/sign-up.tsx`.
+
+Below are barebones examples which you should only use as reference points. You need to redesign and create authentication pages that suit the theme and vibe of the existing codebase. They should be unique with really good and intriguing design.
+
+**Sign In (`src/web/pages/sign-in.tsx`):**
 ```tsx
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'wouter';
@@ -151,42 +150,7 @@ export default function SignIn() {
 }
 ```
 
-## Routes
-Add the auth routes to your router in `src/web/app.tsx`:
-```tsx
-import SignIn from "./pages/sign-in";
-import SignUp from "./pages/sign-up";
-
-// Inside your Switch component:
-<Route path="/sign-in" component={SignIn} />
-<Route path="/sign-up" component={SignUp} />
-```
-
-## API Routes
-Add the auth routes to your API in `src/api/index.ts`:
-```ts
-import { authRoutes } from './routes/auth';
-import { authMiddleware } from './middleware/auth';
-
-// Apply middleware before routes
-app.use(authMiddleware)
-app.route('/', authRoutes);
-```
-
-Create the auth routes file at `src/api/routes/auth.ts`:
-```ts
-import { Hono } from 'hono';
-import { auth } from '../auth';
-
-export const authRoutes = new Hono();
-
-authRoutes.all('/auth/*', async (c) => {
-  return auth.handler(c.req.raw);
-});
-```
-
-## Sign Up Page
-Add the following sign-up page at `src/web/pages/sign-up.tsx` file.
+**Sign Up (`src/web/pages/sign-up.tsx`):**
 ```tsx
 import { useForm } from 'react-hook-form';
 import { useLocation } from 'wouter';
@@ -250,4 +214,38 @@ export default function SignUp() {
     </div>
   );
 }
+```
+
+### Routes
+Add the auth routes to your router in `src/web/app.tsx`:
+```tsx
+import SignIn from "./pages/sign-in";
+import SignUp from "./pages/sign-up";
+
+// Inside your Switch component:
+<Route path="/sign-in" component={SignIn} />
+<Route path="/sign-up" component={SignUp} />
+```
+
+### API Routes
+Add the auth routes to your API in `src/api/index.ts`:
+```ts
+import { authRoutes } from './routes/auth';
+import { authMiddleware } from './middleware/auth';
+
+// Apply middleware before routes
+app.use(authMiddleware)
+app.route('/', authRoutes);
+```
+
+Create the auth routes file at `src/api/routes/auth.ts`:
+```ts
+import { Hono } from 'hono';
+import { auth } from '../auth';
+
+export const authRoutes = new Hono();
+
+authRoutes.all('/auth/*', async (c) => {
+  return auth.handler(c.req.raw);
+});
 ```
