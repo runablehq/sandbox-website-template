@@ -14,7 +14,7 @@ We are using the [AI SDK](https://v6.ai-sdk.dev) with OpenAI-compatible endpoint
 - `google/gemini-2.5-flash-image`
 
 ## Agent Config
-Add the following agent config at `src/api/agent/index.ts` file.
+1. Add the following agent config at `src/api/agent/index.ts` file.
 
 ```typescript
 import { stepCountIs, SystemModelMessage, ToolLoopAgent } from "ai"
@@ -44,7 +44,7 @@ export const agent = new ToolLoopAgent({
 ```
 
 ## Tools
-Add tools in the `src/api/agent/` directory. Below is an example calculator tool showing the full pattern including backend definition, type export, and frontend component.
+2. Add tools in the `src/api/agent/` directory. Below is an example calculator tool showing the full pattern including backend definition, type export, and frontend component.
 
 **Backend Tool (`src/api/agent/calculate-tool.ts`):**
 ```typescript
@@ -88,14 +88,14 @@ function CalculateTool({ tool }: { tool: CalculateToolResult }) {
 ```
 
 ### Adding New Tools
-1. Create tool file in `src/api/agent/` with tool definition
-2. Export type: `export type MyToolResult = UIToolInvocation<typeof myTool>`
-3. Import tool in agent config and add to `tools` object
-4. Create frontend component to render tool output (follow `CalculateTool` pattern)
-5. Add case in `MessagePart` for `part.type === "tool-{toolName}"`
+- Create tool file in `src/api/agent/` with tool definition
+- Export type: `export type MyToolResult = UIToolInvocation<typeof myTool>`
+- Import tool in agent config and add to `tools` object
+- Create frontend component to render tool output (follow `CalculateTool` pattern)
+- Add case in `MessagePart` for `part.type === "tool-{toolName}"`
 
 ## API Routes
-Add the agent routes to your API in `src/api/index.ts`:
+3. Add the agent routes to your API in `src/api/index.ts`:
 
 ```ts
 import { agentRoutes } from './routes/agent';
@@ -103,7 +103,7 @@ import { agentRoutes } from './routes/agent';
 app.route('/agent', agentRoutes)
 ```
 
-Create the agent routes file at `src/api/routes/agent.ts`:
+4. Create the agent routes file at `src/api/routes/agent.ts`:
 
 ```ts
 import { Hono } from "hono"
@@ -122,8 +122,7 @@ agentRoutes.post("/messages", async (c) => {
 ```
 
 ## Frontend Integration
-
-Add the chat page at `src/web/pages/chat.tsx`:
+5. Add the chat page at `src/web/pages/chat.tsx`:
 
 ```tsx
 import { useChat } from "@ai-sdk/react"

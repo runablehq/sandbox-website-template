@@ -5,7 +5,7 @@ We are using [Autumn](https://useautumn.com) for payments and usage tracking.
 You can fetch documentation at [llms.txt](https://docs.useautumn.com/llms.txt). Explore the documentation if something is not explained below.
 
 ## Provider Setup
-Wrap your app with the AutumnProvider in `src/web/components/provider.tsx`:
+1. Wrap your app with the AutumnProvider in `src/web/components/provider.tsx`:
 
 ```tsx
 import { AutumnProvider } from "autumn-js/react";
@@ -20,7 +20,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
 ```
 
 ## Better Auth Integration
-Add the autumn plugin to your Better Auth config in `src/api/auth.ts`:
+2. Add the autumn plugin to your Better Auth config in `src/api/auth.ts`:
 
 ```typescript
 import { autumn } from "autumn-js/better-auth";
@@ -34,7 +34,7 @@ export const auth = betterAuth({
 ```
 
 ## Config
-Add the following config at `autumn.config.ts` in the project root:
+3. Add the following config at `autumn.config.ts` in the project root:
 
 ```typescript
 import { feature, product, featureItem, pricedFeatureItem, priceItem } from "atmn";
@@ -88,7 +88,7 @@ export default {
 ## Frontend Usage
 
 ### Access Customer Data
-Use the `useCustomer` hook to access customer/subscription info:
+4. Use the `useCustomer` hook to access customer/subscription info:
 
 ```tsx
 import { useCustomer } from "autumn-js/react";
@@ -101,7 +101,7 @@ function MyComponent() {
 ```
 
 ### Checkout Dialog
-Use `checkout` with `CheckoutDialog` to let users purchase a plan:
+5. Use `checkout` with `CheckoutDialog` to let users purchase a plan:
 
 ```tsx
 import { useCustomer, CheckoutDialog } from "autumn-js/react";
@@ -127,7 +127,7 @@ function PurchaseButton() {
 ## Backend Usage
 
 ### Check Feature Access
-Use the Autumn SDK to check if a user has access to a feature:
+6. Use the Autumn SDK to check if a user has access to a feature:
 
 ```typescript
 import { Autumn } from "autumn-js";
@@ -149,7 +149,7 @@ if (!data.allowed) {
 ```
 
 ### Track Usage
-Use `autumn.track()` to record consumable usage (AI messages, credits, API calls):
+7. Use `autumn.track()` to record consumable usage (AI messages, credits, API calls):
 
 ```typescript
 await autumn.track({
@@ -162,7 +162,7 @@ await autumn.track({
 You can send negative values to increase balance (e.g., when refunding or adjusting limits).
 
 ### Set Usage Directly
-Use `autumn.usage()` for non-consumable features (seats, workspaces) where you want to set the absolute value:
+8. Use `autumn.usage()` for non-consumable features (seats, workspaces) where you want to set the absolute value:
 
 ```typescript
 await autumn.usage({
