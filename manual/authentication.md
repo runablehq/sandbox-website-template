@@ -4,13 +4,8 @@ We are using [Better Auth](https://www.better-auth.com) for authentication.
 
 You can fetch documentation at [llms.txt](https://www.better-auth.com/llms.txt). Explore the documentation if something is not explained below.
 
-## Database Schema
-1. Run the following command to setup database schema for the authentication from the project root.
-
-`bun x @better-auth/cli@latest generate --config=./src/api/auth.ts --output=./src/api/db/auth.ts`
-
 ## Authentication Config
-2. Add the following auth.ts config at `src/api/auth.ts` file.
+1. Add the following auth.ts config at `src/api/auth.ts` file.
 
 ```typescript
 import { env } from "cloudflare:workers";
@@ -37,8 +32,14 @@ export const auth = betterAuth({
 });
 ```
 
+
+## Database Schema
+2. Run the following command to setup database schema for the authentication from the project root.
+
+`bun x @better-auth/cli@latest generate --config=./src/api/auth.ts --output=./src/api/db/auth.ts`
+
 ## Middleware
-Add the following middleware at `src/api/middleware/authentication.ts` file.
+3. Add the following middleware at `src/api/middleware/authentication.ts` file.
 ```ts
 import { createMiddleware } from "hono/factory";
 import { auth } from "../auth";
@@ -75,7 +76,7 @@ export const authenticatedOnly = createMiddleware(
 ```
 
 ## Auth Client
-Add the following auth client at `src/web/lib/auth.ts` file.
+4. Add the following auth client at `src/web/lib/auth.ts` file.
 ```typescript
 import { createAuthClient } from "better-auth/client"
 
@@ -87,7 +88,7 @@ export const authClient = createAuthClient({
 ## Authentication Pages
 
 ### Sign In & Sign Up
-Add sign-in page at `src/web/pages/sign-in.tsx` and sign-up page at `src/web/pages/sign-up.tsx`.
+5. Add sign-in page at `src/web/pages/sign-in.tsx` and sign-up page at `src/web/pages/sign-up.tsx`.
 
 Below are barebones examples which you should only use as reference points. You need to redesign and create authentication pages that suit the theme and vibe of the existing codebase. They should be unique with really good and intriguing design.
 
@@ -217,7 +218,7 @@ export default function SignUp() {
 ```
 
 ### Routes
-Add the auth routes to your router in `src/web/app.tsx`:
+6. Add the auth routes to your router in `src/web/app.tsx`:
 ```tsx
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
@@ -228,7 +229,7 @@ import SignUp from "./pages/sign-up";
 ```
 
 ### API Routes
-Add the auth routes to your API in `src/api/index.ts`:
+7. Add the auth routes to your API in `src/api/index.ts`:
 ```ts
 import { authRoutes } from './routes/auth';
 import { authMiddleware } from './middleware/auth';
