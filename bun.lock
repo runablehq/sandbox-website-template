@@ -22,7 +22,7 @@
         "react-dom": "19.0.0",
         "react-hook-form": "^7.68.0",
         "react-icons": "^5.5.0",
-        "runable-website-runtime": "^0.0.8",
+        "runable-website-runtime": "^0.0.12",
         "tailwind-merge": "^3.4.0",
         "wouter": "^3.8.0",
         "zod": "^4.1.13",
@@ -853,7 +853,7 @@
 
     "run-async": ["run-async@4.0.6", "", {}, "sha512-IoDlSLTs3Yq593mb3ZoKWKXMNu3UpObxhgA/Xuid5p4bbfi2jdY1Hj0m1K+0/tEuQTxIGMhQDqGjKb7RuxGpAQ=="],
 
-    "runable-website-runtime": ["runable-website-runtime@0.0.8", "", { "dependencies": { "@fastify/busboy": "^3.2.0", "chroma-js": "^3.2.0" }, "peerDependencies": { "vite": "^5.0.0 || ^6.0.0 || ^7.0.0" } }, "sha512-5SJtU0/BqnG83wL2iotEFliKqwO7uGzxeBygG18r7M8RB92xu060XNMUKZMvySPoqM/2bBVnLOgQWrfow+aodQ=="],
+    "runable-website-runtime": ["runable-website-runtime@0.0.12", "", { "dependencies": { "@fastify/busboy": "^3.2.0", "chroma-js": "^3.2.0" }, "peerDependencies": { "vite": "^5.0.0 || ^6.0.0 || ^7.0.0" } }, "sha512-sJsbnI11xMt4LCMhOz/gdH05VI7lKu/OTb/Zh7JHHFha9DusJTH1WWLUV8jDhCXEYm5f6Ddh1j83z/mfG8J3Ag=="],
 
     "rxjs": ["rxjs@7.8.2", "", { "dependencies": { "tslib": "^2.1.0" } }, "sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA=="],
 
