@@ -12,40 +12,45 @@ import { env } from "cloudflare:workers";
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { drizzle } from 'drizzle-orm/d1';
-import * as schema from './db/schema';
-import { autumn } from "autumn-js/better-auth";
+import * as schema from './database/schema';
 
 const db = drizzle(env.DB, { schema });
 
-export const auth = betterAuth({
+export const createAuth = (baseURL: string) => betterAuth({
   database: drizzleAdapter(db, {
     provider: 'sqlite',
   }),
   emailAndPassword: {
     enabled: true,
   },
-  plugins: [
-    autumn()
-  ],
-  secret: process.env.BETTER_AUTH_SECRET,
-  baseURL: process.env.VITE_BASE_URL,
+  secret: env.BETTER_AUTH_SECRET,
+  baseURL,
 });
+
+// Static export for CLI schema generation
+export const auth = createAuth(env.VITE_BASE_URL ?? "http://localhost:5176");
 ```
 
 
 ## Database Schema
 2. Run the following command to setup database schema for the authentication from the project root.
 
-`bun x @better-auth/cli@latest generate --config=./src/api/auth.ts --output=./src/api/db/auth.ts`
+`bun x @better-auth/cli@latest generate --config=./src/api/auth.ts --output=./src/api/database/auth-schema.ts -y`
 
 ## Middleware
 3. Add the following middleware at `src/api/middleware/authentication.ts` file.
 ```ts
 import { createMiddleware } from "hono/factory";
-import { auth } from "../auth";
+import { createAuth } from "../auth";
+
+const getBaseURL = (request: Request) => {
+  const url = new URL(request.url);
+  return `${url.protocol}//${url.host}`;
+};
 
 // Attaches session and user if they are authenticated in the hono context.
 export const authMiddleware = createMiddleware(async (c, next) => {
+  const auth = createAuth(getBaseURL(c.req.raw));
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
   if (!session) {
     c.set("user", null);
@@ -78,7 +83,7 @@ export const authenticatedOnly = createMiddleware(
 ## Auth Client
 4. Add the following auth client at `src/web/lib/auth.ts` file.
 ```typescript
-import { createAuthClient } from "better-auth/client"
+import { createAuthClient } from "better-auth/react"
 
 export const authClient = createAuthClient({
     basePath: "/api/auth",
@@ -232,7 +237,7 @@ import SignUp from "./pages/sign-up";
 7. Add the auth routes to your API in `src/api/index.ts`:
 ```ts
 import { authRoutes } from './routes/auth';
-import { authMiddleware } from './middleware/auth';
+import { authMiddleware } from './middleware/authentication';
 
 // Apply middleware before routes
 app.use(authMiddleware)
@@ -242,11 +247,17 @@ app.route('/', authRoutes);
 Create the auth routes file at `src/api/routes/auth.ts`:
 ```ts
 import { Hono } from 'hono';
-import { auth } from '../auth';
+import { createAuth } from '../auth';
+
+const getBaseURL = (request: Request) => {
+  const url = new URL(request.url);
+  return `${url.protocol}//${url.host}`;
+};
 
 export const authRoutes = new Hono();
 
 authRoutes.all('/auth/*', async (c) => {
+  const auth = createAuth(getBaseURL(c.req.raw));
   return auth.handler(c.req.raw);
 });
 ```
