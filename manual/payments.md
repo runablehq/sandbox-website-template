@@ -119,6 +119,7 @@ function PurchaseButton() {
         await checkout({
           productId: "pro",
           dialog: CheckoutDialog,
+          successUrl: window.location.origin,
         });
       }}
     >
@@ -177,3 +178,7 @@ await autumn.usage({
 ```
 
 Note: This overwrites the current usage value rather than incrementing it.
+
+## Final Step
+
+**IMPORTANT:** After completing the integration, run `bunx atmn push` to sync your config with Autumn.
