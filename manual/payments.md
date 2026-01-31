@@ -4,15 +4,19 @@ We are using [Autumn](https://useautumn.com) for payments and usage tracking.
 
 You can fetch documentation at [llms.txt](https://docs.useautumn.com/llms.txt). Explore the documentation if something is not explained below.
 
+**Important:** When asked to integrate payments, always create `autumn.config.ts` with a reasonable default config based on the app's domain (e.g., "todos" for a todo app, "messages" for a chat app, "api_calls" for an API service).
+
 ## Provider Setup
 1. Wrap your app with the AutumnProvider in `src/web/components/provider.tsx`:
 
 ```tsx
 import { AutumnProvider } from "autumn-js/react";
-import { env } from "cloudflare:workers";
+
 export function Provider({ children }: { children: React.ReactNode }) {
+  // betterAuthUrl must be window.location.origin (just the host, no path)
+  // The SDK internally appends /api/auth/autumn/* to this URL
   return (
-    <AutumnProvider betterAuthUrl={env.VITE_BASE_URL}>
+    <AutumnProvider betterAuthUrl={window.location.origin}>
       {children}
     </AutumnProvider>
   );
