@@ -25,6 +25,11 @@ export const createAuth = (baseURL: string) => betterAuth({
   },
   secret: env.BETTER_AUTH_SECRET,
   baseURL,
+  trustedOrigins: async (request) => {
+    const origin = request?.headers.get("origin");
+    if (origin) return [origin];
+    return [];
+  },
 });
 
 // Static export for CLI schema generation
