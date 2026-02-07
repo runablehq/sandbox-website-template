@@ -89,6 +89,76 @@ export default {
 };
 ```
 
+### Feature Types
+
+| Type | Description | Use Case |
+|------|-------------|----------|
+| `boolean` | Simple on/off access | Feature flags, premium features |
+| `single_use` | One-time consumable, doesn't reset | Lifetime credits, one-time purchases |
+| `continuous_use` | Resets periodically based on interval | Monthly API calls, daily messages |
+| `credit_system` | Credits that map to multiple metered features | AI credits for various models |
+
+### Product Configuration
+
+```typescript
+product({
+  id: "pro",              // Unique identifier
+  name: "Pro Plan",       // Display name
+  is_default: false,      // Auto-assign to new customers
+  is_add_on: false,       // Can be added to existing plan
+  group: "main",          // Group related products (for upgrades/downgrades)
+  items: [...],           // Features and prices
+  free_trial: {           // Optional trial period
+    duration: "day",      // "day" | "month" | "year"
+    length: 14,
+    unique_fingerprint: true,
+    card_required: false,
+  },
+})
+```
+
+### Product Items
+
+**`priceItem`** - Flat recurring price:
+```typescript
+priceItem({
+  price: 2000,            // Price in cents ($20.00)
+  interval: "month",      // Billing interval
+})
+```
+
+**`featureItem`** - Include a feature with usage limits (no extra charge):
+```typescript
+featureItem({
+  feature_id: "messages",
+  included_usage: 1000,   // Or "inf" for unlimited
+  interval: "month",      // Reset interval
+  reset_usage_when_enabled: true, // Reset on plan change
+})
+```
+
+**`pricedFeatureItem`** - Feature with usage-based pricing:
+```typescript
+pricedFeatureItem({
+  feature_id: "messages",
+  included_usage: 1000,   // Free included amount
+  price: 5,               // Price per billing_units (in cents)
+  billing_units: 100,     // e.g., $0.05 per 100 messages
+  interval: "month",
+  usage_model: "prepaid" | "pay_per_use",
+  // Alternatively use tiers for volume pricing:
+  tiers: [
+    { to: 1000, amount: 10 },   // $0.10 per unit up to 1000
+    { to: 10000, amount: 5 },   // $0.05 per unit up to 10000
+    { to: "inf", amount: 2 },   // $0.02 per unit thereafter
+  ],
+})
+```
+
+### Intervals
+
+Available intervals: `minute`, `hour`, `day`, `week`, `month`, `quarter`, `semi_annual`, `year`
+
 ## Frontend Usage
 
 ### Access Customer Data
@@ -164,7 +234,10 @@ await autumn.track({
 });
 ```
 
-You can send negative values to increase balance (e.g., when refunding or adjusting limits).
+**Important constraints:**
+- `value` must be a positive number (>= 0) - you cannot track negative usage
+- Use `track()` for incrementing usage (e.g., user sent a message)
+- Each track call decrements the user's balance by the value
 
 ### Set Usage Directly
 8. Use `autumn.usage()` for non-consumable features (seats, workspaces) where you want to set the absolute value:
@@ -177,7 +250,32 @@ await autumn.usage({
 });
 ```
 
-Note: This overwrites the current usage value rather than incrementing it.
+**Important constraints:**
+- `value` must be >= 0 - you cannot set negative usage
+- This overwrites the current usage value rather than incrementing it
+- Use for features where you track "current count" not "consumption" (e.g., active seats, projects)
+
+### Adjust Balance
+9. Use `autumn.customers.updateBalances()` to directly set or adjust a customer's balance:
+
+```typescript
+// Set balance to a specific value
+await autumn.customers.updateBalances("user_id", {
+  feature_id: "messages",
+  balance: 500,  // Set balance to 500
+});
+
+// Or update multiple features at once
+await autumn.customers.updateBalances("user_id", [
+  { feature_id: "messages", balance: 500 },
+  { feature_id: "api_calls", balance: 1000 },
+]);
+```
+
+Use this for:
+- Granting bonus credits
+- Manual adjustments
+- Refunds (increase balance)
 
 ## Final Step
 
