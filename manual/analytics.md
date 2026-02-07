@@ -2,34 +2,6 @@
 
 We are using [Runable Analytics](https://onedollarstats.com) for privacy-friendly website analytics.
 
-## Script Installation
-1. The analytics script is already added to `index.html`:
-
-```html
-<script defer src="/runable.js" data-url="https://collector.onedollarstats.com/events"></script>
-```
-
-The script automatically tracks page views on load and SPA navigation.
-
-## Configuration Attributes
-
-| Attribute | Description |
-|-----------|-------------|
-| `data-url` | Analytics collector endpoint URL |
-| `data-debug` | Set to a hostname to enable tracking on localhost (e.g., `data-debug="mysite.com"`) |
-| `data-autocollect` | Set to `"false"` to disable automatic page view tracking |
-| `data-hash-routing` | Add this attribute if your app uses hash-based routing |
-| `data-props` | Default properties sent with all events (format: `key=value;key2=value2`) |
-
-## Automatic Tracking
-
-The script automatically:
-- Tracks page views on initial load
-- Tracks SPA navigation via `history.pushState` and `popstate` events
-- Captures UTM parameters from URLs (`utm_source`, `utm_medium`, `utm_campaign`, etc.)
-- Skips tracking on localhost (unless `data-debug` is set)
-- Skips tracking for headless browsers and bots
-
 ## Manual Page View Tracking
 2. Use `window.stonks.view()` to manually track a page view:
 
