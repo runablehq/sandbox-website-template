@@ -4,9 +4,10 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwind from "@tailwindcss/vite"
 import path from "path";
 import runableWebsiteRuntime from "runable-website-runtime"
+import websiteSeoPlugin from "./vite/plugins/websiteSeoPlugin";
 
 export default defineConfig({
-	plugins: [react(), runableWebsiteRuntime(), cloudflare(), tailwind()],
+	plugins: [react(), websiteSeoPlugin(), runableWebsiteRuntime(), cloudflare(), tailwind()],
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src/web"),
