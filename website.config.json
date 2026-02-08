@@ -8,5 +8,6 @@
 		"card": "summary_large_image",
 		"site": "@runable"
 	},
+	"hostname": "xyz.runable.site",
 	"themeColor": "#000000"
 }

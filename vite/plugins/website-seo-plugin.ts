@@ -7,6 +7,7 @@ type WebsiteConfig = {
 	name?: string;
 	description?: string;
 	url?: string;
+	hostname?: string;
 	ogImage?: string;
 	favicon?: string;
 	twitter?: {
@@ -36,7 +37,7 @@ export default function websiteSeoPlugin(): Plugin {
 			const name = config.name ?? "";
 			const description = config.description ?? "";
 			const siteUrl = config.url ?? "";
-			const hostname = siteUrl ? new URL(siteUrl).hostname : "";
+			const hostname = config.hostname ?? "";
 			const ogImage = config.ogImage ?? "";
 			const favicon = config.favicon ?? "/favicon.ico";
 			const themeColor = config.themeColor ?? "";
