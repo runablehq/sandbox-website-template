@@ -2,12 +2,5 @@
 	"name": "Runable",
 	"description": "A template for building a React application with Vite, Hono, and Cloudflare Workers",
 	"url": "https://example.com",
-	"ogImage": "/og-image.png",
-	"favicon": "/vite.svg",
-	"twitter": {
-		"card": "summary_large_image",
-		"site": "@runable"
-	},
-	"hostname": "xyz.runable.site",
-	"themeColor": "#000000"
+	"hostname": "xyz.runable.site"
 }
