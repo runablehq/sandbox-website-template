@@ -13,6 +13,8 @@ Reference docs: [llms.txt](https://www.better-auth.com/llms.txt)
 
 Create `src/api/auth.ts`:
 
+> **Port:** The local dev server port is defined in `website.config.json` (or provided by the agent runtime). Use `https://localhost:5178` as the default fallback for local development.
+
 ```ts
 import { env } from "cloudflare:workers";
 import { betterAuth } from "better-auth";
@@ -39,8 +41,8 @@ export const createAuth = (baseURL: string) =>
     },
   });
 
-// Static export for CLI schema generation
-export const auth = createAuth(env.VITE_BASE_URL ?? "http://localhost:5176");
+// Static export for CLI schema generation (uses the local dev server port)
+export const auth = createAuth("https://localhost:5178");
 ```
 
 ## 2. Generate Auth Schema
