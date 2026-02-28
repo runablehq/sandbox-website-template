@@ -51,7 +51,6 @@
     "build": "vite build",
     "cf-typegen": "wrangler types",
     "check": "tsgo && vite build && wrangler deploy --dry-run",
-    "deploy": "wrangler deploy",
     "dev": "vite",
     "lint": "eslint .",
     "preview": "bun run build && vite preview",
