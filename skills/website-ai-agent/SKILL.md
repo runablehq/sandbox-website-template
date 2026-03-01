@@ -7,6 +7,14 @@ description: Build AI SDK ToolLoopAgent flows with OpenAI-compatible endpoints, 
 
 We use [AI SDK](https://v6.ai-sdk.dev) with OpenAI-compatible endpoints for AI agents.
 
+<preflight>
+Before wiring, state your assumptions about the agent's persona, which model to use, what tools it needs, and where the chat UI lives in the app. The user will correct what's wrong.
+</preflight>
+
+<design_thinking>
+The chat UI should feel native to the app, not a bolted-on widget. Tool results should be rendered visually — not raw JSON dumps. Streaming should feel responsive; an empty screen with a spinner is worse than incremental text. Model choice is a cost/quality tradeoff — default to haiku for speed, escalate to sonnet when the task needs it.
+</design_thinking>
+
 ## Supported Models
 
 - `anthropic/claude-sonnet-4.5`

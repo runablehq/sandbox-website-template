@@ -9,6 +9,14 @@ We use [Better Auth](https://www.better-auth.com) for authentication.
 
 Reference docs: [llms.txt](https://www.better-auth.com/llms.txt)
 
+<preflight>
+Before wiring, state your assumptions about which auth methods are needed (email/password, OAuth, magic link), which routes should be protected, where users land after sign-in, and whether sign-in/sign-up are separate pages or a single page with tabs. The user will correct what's wrong.
+</preflight>
+
+<design_thinking>
+Auth pages are the first impression for returning users — match the app's visual language, don't ship barebones forms. Error states matter as much as the happy path; a vague "something went wrong" erodes trust. Loading and redirect transitions should feel instant, not jarring.
+</design_thinking>
+
 ## 1. Authentication Config
 
 Create `src/api/auth.ts`:

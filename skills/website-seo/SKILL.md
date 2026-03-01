@@ -5,6 +5,10 @@ description: Add SEO metadata and social sharing tags to the website. Use when t
 
 # Website SEO & Metadata
 
+<design_thinking>
+Meta tags are for humans sharing links, not for gaming search engines. When someone pastes a URL into Slack or Twitter, the preview card is the first impression of the entire product. Write titles and descriptions as a one-line pitch to a stranger. og:image matters more than most teams realize — a missing or broken image makes the product look abandoned. Keep meta content honest; clickbait descriptions erode trust the moment someone lands.
+</design_thinking>
+
 Two layers of metadata:
 
 1. **Static tags in `index.html`** → seen by crawlers (Twitter, Slack, Discord, LinkedIn, Google)

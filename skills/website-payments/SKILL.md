@@ -9,6 +9,14 @@ We use [Autumn](https://useautumn.com) for payments and usage tracking.
 
 Reference docs: [llms.txt](https://docs.useautumn.com/llms.txt)
 
+<preflight>
+Before wiring, state your assumptions about which features to gate, pricing tiers and their limits, billing model (boolean access vs usage-based vs credits), and whether there's a pricing page. The user will correct what's wrong.
+</preflight>
+
+<design_thinking>
+A pricing page is a sales page, not a settings page — it should make the value of upgrading obvious at a glance. Checkout should feel frictionless; every extra click is drop-off. Upgrade prompts should be contextual (shown when the user hits a limit) not nagging (shown on every page load).
+</design_thinking>
+
 When integrating payments, always create `autumn.config.ts` with a reasonable default feature for the app domain (for example `todos`, `messages`, or `api_calls`).
 
 ## 1. Provider Setup
