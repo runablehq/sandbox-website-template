@@ -3,7 +3,7 @@
 React + Vite + Hono + Tailwind + Cloudflare Workers
 
 <preflight>
-Before building or changing anything, form a plan and present it to the user. The plan should include your assumptions about what's being built, which parts of the stack are involved (frontend, API, database, routing), what the visual direction is for any UI work, and what files you expect to create or modify.
+Before building or changing anything, form a plan and present it to the user. The plan should include your assumptions about what's being built, which parts of the stack are involved (frontend, API, database, routing), what the visual direction is for any UI work, and what files you expect to create or modify. Write a super detailed outline.md file about the site and specially on the design guidelines which you can refer for consistent theme. 
 
 State these as decisions, not questions. The user will correct what's wrong and ignore what's right.
 
@@ -100,26 +100,50 @@ app.get('/api/hello', (c) => c.json({ message: 'Hello' }));
 - Keep components small and focused — one responsibility per file
 - Fetch API data with `fetch("/api/...")` — no extra HTTP libraries needed
 
-<design_thinking>
-Before writing any UI code, understand the context and commit to a clear aesthetic direction. Ask: what is this interface for, who uses it, and what should it feel like? Then pick a tone and execute it with precision — brutally minimal, maximalist, retro-futuristic, editorial, luxury, playful, brutalist, organic. Bold maximalism and refined minimalism both work. The key is intentionality, not intensity.
+<design_guidelines>
+Before writing UI code, document the design direction in outline.md with fonts, colors, spacing, and visual style. Reference this file for all UI work to maintain consistency.
 
-Create a `DESIGN.md` early with chosen fonts, colors, spacing, and visual direction. Reference it for all UI work to maintain cohesion. This is the style anchor — every component, page, and interaction should feel like it belongs to the same system.
+## Typography
+- Use distinctive, characterful fonts — never Inter, Roboto, Arial, or system fonts
+- Pair a display font with a refined body font
+- Create hierarchy through size contrast and weight
+- Use generous line height; text should never feel crowded
 
-Typography does the heavy lifting. Choose fonts that are beautiful, unique, and characterful. Never default to Inter, Roboto, Arial, or system fonts. Pair a distinctive display font with a refined body font. Strong size contrast between headings and body. Weight creates hierarchy. Generous line height. Text should never feel crowded.
+## Color
+- Commit to a dominant color with sharp accents
+- Use CSS variables and Tailwind for theming
+- Accents appear sparingly for emphasis, not decoration
 
-Color commits, it doesn't hedge. Use CSS variables and Tailwind for theming. A dominant color with sharp accents outperforms a timid, evenly-distributed palette. Cohesion comes from a few intentional colors plus neutrals — accents appear sparingly, for emphasis, not decoration.
+## Layout
+- Break expectations: asymmetric layouts, overlapping elements, grid-breaking moments
+- Use generous negative space or controlled density intentionally
 
-Composition breaks expectations. Asymmetric layouts, overlapping elements, diagonal flow, grid-breaking moments, generous negative space or controlled density. Unexpected spatial choices are what separate designed from generated.
+## Backgrounds
+- Create atmosphere with gradient meshes, noise textures, geometric patterns, or layered transparencies
+- Match the effect to the overall aesthetic
 
-Backgrounds create atmosphere. Don't default to solid colors. Gradient meshes, noise textures, geometric patterns, layered transparencies, dramatic shadows, grain overlays — these add depth and context. Match the effect to the aesthetic.
+## Motion
+- Prioritize one well-orchestrated page load with staggered reveals (animation-delay)
+- Focus on high-impact moments over scattered micro-interactions
+- Use CSS-only solutions for HTML, Motion library for React
 
-Motion is purposeful. One well-orchestrated page load with staggered reveals creates more delight than scattered micro-interactions. Prioritize page transitions and hover states that surprise. Use CSS-only solutions for HTML, Motion library for React when available.
+## Anti-patterns to avoid
+- Purple gradients on white backgrounds
+- Predictable card grids with rounded corners
+- Cookie-cutter layouts lacking context-specific character
+- Overused fonts (Inter, Space Grotesk, Roboto)
 
-Match implementation complexity to the vision. Maximalist designs need elaborate code with extensive animations and effects. Minimalist designs need restraint, precision, and careful attention to spacing, typography, and subtle details. Elegance comes from executing the vision well, not from adding more.
-
-**Never produce generic AI aesthetics** — the purple-on-white gradients, the card grids with rounded corners, the cookie-cutter layouts that lack context-specific character. No two interfaces should look the same. Vary between light and dark themes, different fonts, different aesthetics. If it looks like "AI made this," something failed.
-</design_thinking>
+If the result looks like "AI made this," redesign it.
+</design_guidelines>
 
 ## Config
 
 `website.config.json` contains the site name, description, and URL — use it as the source of truth for site-wide values.
+
+## Other tools you can use
+
+Use web_search tool to get any information, or images you need for the website. 
+
+ALWAYS first try to search and find images instead of generating in the first attempt itself. 
+
+You can mb(mini browser) tool to navigate through website to find informations, images, logo which you are not able to get from web_search tool. ALWAYS use mb(mini browser) command if user mentions some website to take reference from because web_search can give you outdated results. 
