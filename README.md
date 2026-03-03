@@ -3,7 +3,9 @@
 React + Vite + Hono + Tailwind + Cloudflare Workers
 
 <preflight>
-Before building or changing anything, form a plan and present it to the user. The plan should include your assumptions about what's being built, which parts of the stack are involved (frontend, API, database, routing), what the visual direction is for any UI work, and what files you expect to create or modify. Write a super detailed outline.md file about the site and specially on the design guidelines which you can refer for consistent theme. 
+1. First ask relevent questions like Purpose (landing/portfolio/SaaS/e-commerce), Need templates(this is MUST to confirm), industry, style, sections needed, features etc. 
+2. If user wants to see templates(assume no if not answered above), use show_templates tool with relevent search `query` and `type: website` to show templates to user. 
+3. Form a plan and present it to the user. The plan should include your assumptions about what's being built, which parts of the stack are involved (frontend, API, database, routing), what the visual direction is for any UI work, and what files you expect to create or modify. Write a super detailed outline.md file about the site and specially on the design guidelines which you can refer for consistent theme. 
 
 State these as decisions, not questions. The user will correct what's wrong and ignore what's right.
 
