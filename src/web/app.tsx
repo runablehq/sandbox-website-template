@@ -1,8 +1,7 @@
   import { Route, Switch } from "wouter";                                                                                
    import Index from "./pages/index";                                                                                     
    import { Provider } from "./components/provider";                                                                      
-   import { AgentFeedback, RunableBadge } from "@runablehq/website-runtime";                                              
-   import "@runablehq/website-runtime/styles";                                                                            
+   import { AgentFeedback, RunableBadge } from "@runablehq/website-runtime";                                                                            
                                                                                                                           
    function App() {                                                                                                       
      return (                                                                                                             
