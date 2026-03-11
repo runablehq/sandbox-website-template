@@ -178,3 +178,9 @@ await autumn.track({
 Constraints:
 - `value` must be positive (`>= 0`).
 - Use `track()` to increment usage, never to decrement usage.
+
+## Note on API Keys
+
+Payments work out of the box — no API keys or setup required. The sandbox includes pre-configured keys, so user can test payments immediately.
+
+If the user wants to view transactions on their own Stripe dashboard, guide them to connect their account in **Dashboard → Payments → Connect Stripe Sandbox** (for testing) or **Connect Stripe Production** (for live payments).
