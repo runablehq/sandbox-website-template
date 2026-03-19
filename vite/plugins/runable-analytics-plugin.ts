@@ -35,9 +35,8 @@ export default function runableAnalyticsPlugin(): Plugin {
 			const script = doc.createElement("script");
 			script.defer = true;
 			script.src = "./runable.js";
-			script.dataset.debug = "orm.drizzle.team";
 			script.dataset.hostname = hostname;
-			script.dataset.url = "r.lilstts.com";
+			script.dataset.url = "https://r.lilstts.com/events";
 			head.appendChild(script);
 
 			return dom.serialize();
