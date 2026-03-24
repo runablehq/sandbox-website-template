@@ -74,3 +74,9 @@ app.get('/api/hello', (c) => c.json({ message: 'Hello' }));
 ## Config
 
 `website.config.json` contains the site name, description, and URL — use it as the source of truth for site-wide values.
+
+## Agent Rules
+
+**CRITICAL: This project uses Tailwind CSS v4.** No `tailwind.config.js`, no `postcss.config.js`, no `@tailwind` directives. All configuration is CSS-first via `@theme` in `src/web/styles.css` and the `@tailwindcss/vite` plugin. Do NOT use Tailwind v3 syntax.
+
+**IMPORTANT: Don't assume how a package works from memory.** Check the installed version in `package.json` and read docs in `node_modules/<pkg>/` before using any package. APIs change between major versions — guessing leads to broken code.
