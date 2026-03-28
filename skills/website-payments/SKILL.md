@@ -48,8 +48,6 @@ export const auth = betterAuth({
 
 Create `autumn.config.ts` in project root:
 
-> **`reset` and `price` are mutually exclusive on `item()`.** Use `reset` for free included allowances that reset periodically. Use `price` (with `price.interval`) for usage-based billing. Never combine both on the same item.
-
 ```ts
 import { feature, plan, item } from "atmn";
 
