@@ -79,9 +79,4 @@ app.get('/api/hello', (c) => c.json({ message: 'Hello' }));
 
 **CRITICAL: This project uses Tailwind CSS v4.** No `tailwind.config.js`, no `postcss.config.js`, no `@tailwind` directives. All configuration is CSS-first via `@theme` in `src/web/styles.css` and the `@tailwindcss/vite` plugin. Do NOT use Tailwind v3 syntax.
 
-**IMPORTANT: Don't assume how a package works from memory.** Check the installed version in `package.json` before using any package — APIs change between versions. The build will catch most type errors. For `autumn.config.ts` specifically, run `npx tsc --noEmit --skipLibCheck autumn.config.ts` since it's not part of the build. If anything fails, check the docs:
-- `autumn-js`/`atmn` — https://docs.useautumn.com/llms.txt (also see `skills/website-payments/SKILL.md`)
-- `ai`/`@ai-sdk/*` — https://sdk.vercel.ai/docs
-- `better-auth` — https://www.better-auth.com/docs/introduction
-- `drizzle-orm`/`drizzle-kit` — https://orm.drizzle.team/docs/overview
-- `hono` — https://hono.dev/docs
+**IMPORTANT: Don't assume how a package works from memory.** Run `bun build` to catch type errors. If anything fails, check the package docs.

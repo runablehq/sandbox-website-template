@@ -7,17 +7,10 @@ description: Integrate Autumn payments and usage tracking with Better Auth, fron
 
 We use [Autumn](https://useautumn.com) for payments and usage tracking.
 
-**Pinned versions:** `autumn-js@1.2.0` and `atmn@1.1.8`.
-
-**Docs (v2):** [docs.useautumn.com/llms.txt](https://docs.useautumn.com/llms.txt) | [CLI config](https://docs.useautumn.com/cli/config)
+**Docs:** [docs.useautumn.com/llms.txt](https://docs.useautumn.com/llms.txt) | [CLI config](https://docs.useautumn.com/cli/config)
 
 <preflight>
 Before wiring, state your assumptions about which features to gate, pricing tiers and their limits, billing model (boolean access vs usage-based vs credits), and whether there's a pricing page. The user will correct what's wrong.
-
-After writing or modifying `autumn.config.ts`, always verify it:
-1. Fetch https://docs.useautumn.com/cli/config and confirm the builder functions (`feature`, `plan`, `item`) and their parameter names match what you wrote.
-2. Run `bunx tsc --noEmit autumn.config.ts` to catch type errors against the installed `atmn` package types.
-3. If any parameter name or structure doesn't match the docs or types, fix it before proceeding.
 </preflight>
 
 <design_thinking>
