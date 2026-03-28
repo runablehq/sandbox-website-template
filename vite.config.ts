@@ -3,10 +3,10 @@ import react from "@vitejs/plugin-react";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwind from "@tailwindcss/vite"
 import path from "path";
-import runableAnalyticsPlugin from "./vite/plugins/runable-analytics-plugin";
+import databuddyAnalyticsPlugin from "./vite/plugins/databuddy-analytics-plugin";
 
 export default defineConfig({
-	plugins: [react(), runableAnalyticsPlugin(), cloudflare(), tailwind()],
+	plugins: [react(), databuddyAnalyticsPlugin(), cloudflare(), tailwind()],
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src/web"),

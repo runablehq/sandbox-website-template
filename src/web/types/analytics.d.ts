@@ -1,11 +1,8 @@
-interface StonksAnalytics {
-  event: (name: string, pathOrProps?: string | Record<string, unknown>, props?: Record<string, unknown>) => void
-  view: (pathOrProps?: string | Record<string, unknown>, props?: Record<string, unknown>) => void
-}
+/// <reference types="@databuddy/sdk" />
 
-declare global {
-  interface Window {
-    stonks: StonksAnalytics
-  }
-}
-export {}
+/**
+ * Global `window.databuddy` / `window.db` come from the Databuddy loader
+ * (https://cdn.databuddy.cc/databuddy.js), injected by `databuddy-analytics-plugin`.
+ * @see https://www.databuddy.cc/docs/getting-started.md
+ */
+export {};

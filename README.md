@@ -73,7 +73,7 @@ app.get('/api/hello', (c) => c.json({ message: 'Hello' }));
 
 ## Config
 
-`website.config.json` contains the site name, description, and URL — use it as the source of truth for site-wide values.
+`website.config.json` contains the site name, description, URL, and optional `databuddyClientId` for analytics — use it as the source of truth for site-wide values. You can override the Databuddy client ID with `VITE_DATABUDDY_CLIENT_ID`.
 
 ## Agent Rules
 
