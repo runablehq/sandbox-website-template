@@ -144,15 +144,16 @@ SDK reads `AUTUMN_SECRET_KEY` from env automatically:
 import { Autumn } from "autumn-js";
 const autumn = new Autumn();
 
-// Check
+// Check — verify if customer has enough balance before allowing access
+// result.allowed: boolean, result.balance: { remaining, granted, usage, unlimited }
 const result = await autumn.customers.check({
   customerId: "user_id",
   featureId: "messages",
-  requiredBalance: 1,
+  requiredBalance: 1,          // minimum balance needed (default: 1)
 });
-if (!result.allowed) { /* blocked */ }
+if (!result.allowed) { /* blocked — throw error customer has insufficient balance */ }
 
-// Track
+// Track — record usage after the action succeeds, value defaults to 1
 await autumn.track({
   customerId: "user_id",
   featureId: "messages",
