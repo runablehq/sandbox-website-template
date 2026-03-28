@@ -7,7 +7,7 @@ description: Integrate Autumn payments and usage tracking with Better Auth, fron
 
 We use [Autumn](https://useautumn.com) for payments and usage tracking.
 
-Reference docs: [llms.txt](https://docs.useautumn.com/llms.txt)
+**Docs:** [docs.useautumn.com/llms.txt](https://docs.useautumn.com/llms.txt) | [CLI config](https://docs.useautumn.com/cli/config)
 
 <preflight>
 Before wiring, state your assumptions about which features to gate, pricing tiers and their limits, billing model (boolean access vs usage-based vs credits), and whether there's a pricing page. The user will correct what's wrong.
@@ -27,9 +27,7 @@ Wrap app provider in `src/web/components/provider.tsx`:
 import { AutumnProvider } from "autumn-js/react";
 
 export function Provider({ children }: { children: React.ReactNode }) {
-  // betterAuthUrl must be window.location.origin (host only, no path)
-  // SDK appends /api/auth/autumn/* internally
-  return <AutumnProvider betterAuthUrl={window.location.origin}>{children}</AutumnProvider>;
+  return <AutumnProvider useBetterAuth>{children}</AutumnProvider>;
 }
 ```
 
@@ -51,60 +49,58 @@ export const auth = betterAuth({
 Create `autumn.config.ts` in project root:
 
 ```ts
-import { feature, product, featureItem, pricedFeatureItem, priceItem } from "atmn";
+import { feature, plan, item } from "atmn";
 
 export const messages = feature({
   id: "messages",
   name: "Messages",
-  type: "continuous_use",
+  type: "metered",       // "boolean" | "metered" | "credit_system"
+  consumable: true,       // metered only: true (messages) or false (seats)
 });
 
-export const freePlan = product({
+export const free = plan({
   id: "free",
   name: "Free",
-  is_default: true,
+  autoEnable: true,
   items: [
-    featureItem({
-      feature_id: messages.id,
-      included_usage: 100,
-      interval: "month",
+    item({
+      featureId: messages.id,
+      included: 100,
+      reset: { interval: "month" },
     }),
   ],
 });
 
-export const proPlan = product({
+export const pro = plan({
   id: "pro",
   name: "Pro",
+  price: { amount: 2000, interval: "month" },
   items: [
-    priceItem({
-      price: 200,
-      interval: "month",
+    item({
+      featureId: messages.id,
+      included: 1000,
+      reset: { interval: "month" },
     }),
-    pricedFeatureItem({
-      feature_id: messages.id,
-      price: 5,
-      interval: "month",
-      included_usage: 1000,
-      billing_units: 100,
-      usage_model: "pay_per_use",
+  ],
+});
+
+// Example: usage-based pricing item (uses price, NOT reset)
+export const payAsYouGo = plan({
+  id: "pay_as_you_go",
+  name: "Pay As You Go",
+  items: [
+    item({
+      featureId: messages.id,
+      price: { amount: 1, billingUnits: 1, billingMethod: "usage_based", interval: "month" },
     }),
   ],
 });
 
 export default {
-  products: [freePlan, proPlan],
   features: [messages],
+  plans: [free, pro, payAsYouGo],
 };
 ```
-
-Feature types:
-- `boolean`: on/off access.
-- `single_use`: one-time consumable.
-- `continuous_use`: resets by interval.
-- `credit_system`: credits shared across metered features.
-
-Intervals:
-- `minute`, `hour`, `day`, `week`, `month`, `quarter`, `semi_annual`, `year`
 
 ## 4. Frontend Access
 
@@ -144,40 +140,51 @@ function PurchaseButton() {
 }
 ```
 
-## 6. Backend Feature Checks
+## 5. Backend Check & Track
+
+SDK reads `AUTUMN_SECRET_KEY` from env automatically:
 
 ```ts
 import { Autumn } from "autumn-js";
+const autumn = new Autumn();
 
-const autumn = new Autumn({
-  secretKey: process.env.AUTUMN_SECRET_KEY,
+// Check — verify if customer has enough balance before allowing access
+// result.allowed: boolean, result.balance: { remaining, granted, usage, unlimited }
+const result = await autumn.customers.check({
+  customerId: "user_id",
+  featureId: "messages",
+  requiredBalance: 1,          // minimum balance needed (default: 1)
 });
+if (!result.allowed) { /* blocked — throw error customer has insufficient balance */ }
 
-const { data } = await autumn.check({
-  customer_id: "user_id_from_auth",
-  feature_id: "messages",
-  required_balance: 1,
-});
-
-if (!data.allowed) {
-  console.log("User has run out of messages");
-  return;
-}
-```
-
-## 7. Usage Tracking
-
-```ts
+// Track — record usage after the action succeeds, value defaults to 1
 await autumn.track({
-  customer_id: "user_id_from_auth",
-  feature_id: "messages",
+  customerId: "user_id",
+  featureId: "messages",
   value: 1,
 });
 ```
 
-Constraints:
-- `value` must be positive (`>= 0`).
-- Use `track()` to increment usage, never to decrement usage.
+## 6. Backend Handler (autumnHandler)
+
+For non-Better-Auth setups, mount `autumnHandler`:
+
+```ts
+import { autumnHandler } from "autumn-js/hono"; // or autumn-js/next, autumn-js/fetch, autumn-js/express
+
+app.all("/api/autumn/*", (c) =>
+  autumnHandler({
+    identify: async () => {
+      const user = getAuthUser(c);
+      return { customerId: user.id };
+    },
+  })(c)
+);
+```
+
+## CLI Commands (atmn@1.1.8)
+
+`atmn init` | `atmn login` | `atmn push` (`-p` for prod, `-y` to confirm) | `atmn pull` | `atmn nuke` | `atmn env` | `atmn dashboard`
 
 ## Note on API Keys
 
