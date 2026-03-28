@@ -55,6 +55,8 @@ export const auth = betterAuth({
 
 Create `autumn.config.ts` in project root:
 
+> **`reset` and `price` are mutually exclusive on `item()`.** Use `reset` for free included allowances that reset periodically. Use `price` (with `price.interval`) for usage-based billing. Never combine both on the same item.
+
 ```ts
 import { feature, plan, item } from "atmn";
 
@@ -87,14 +89,25 @@ export const pro = plan({
       featureId: messages.id,
       included: 1000,
       reset: { interval: "month" },
-      price: { amount: 5, billingUnits: 100, billingMethod: "usage_based", interval: "month" },
+    }),
+  ],
+});
+
+// Example: usage-based pricing item (uses price, NOT reset)
+export const payAsYouGo = plan({
+  id: "pay_as_you_go",
+  name: "Pay As You Go",
+  items: [
+    item({
+      featureId: messages.id,
+      price: { amount: 1, billingUnits: 1, billingMethod: "usage_based", interval: "month" },
     }),
   ],
 });
 
 export default {
   features: [messages],
-  plans: [free, pro],
+  plans: [free, pro, payAsYouGo],
 };
 ```
 
