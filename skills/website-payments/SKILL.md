@@ -116,25 +116,26 @@ function MyComponent() {
 }
 ```
 
-## 5. Checkout Dialog
+## 5. Checkout (Plan Attach)
+
+v2 uses `attach()` — redirects to Stripe hosted checkout.
 
 ```tsx
-import { useCustomer, CheckoutDialog } from "autumn-js/react";
+import { useCustomer } from "autumn-js/react";
 
 function PurchaseButton() {
-  const { checkout } = useCustomer();
+  const { attach } = useCustomer();
 
   return (
     <button
       onClick={async () => {
-        await checkout({
-          productId: "pro",
-          dialog: CheckoutDialog,
+        await attach({
+          planId: "pro",
           successUrl: window.location.origin,
         });
       }}
     >
-      Select Pro Plan
+      Upgrade to Pro
     </button>
   );
 }
