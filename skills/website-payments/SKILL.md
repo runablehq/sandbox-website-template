@@ -7,6 +7,8 @@ description: Integrate Autumn payments and usage tracking with Better Auth, fron
 
 We use [Autumn](https://useautumn.com) for payments and usage tracking.
 
+**Pinned versions:** `autumn-js@1.2.0`, `atmn@1.1.8`.
+
 **Docs:** [docs.useautumn.com/llms.txt](https://docs.useautumn.com/llms.txt) | [CLI config](https://docs.useautumn.com/cli/config)
 
 <preflight>
@@ -179,16 +181,14 @@ await autumn.track({
 For non-Better-Auth setups, mount `autumnHandler`:
 
 ```ts
-import { autumnHandler } from "autumn-js/hono"; // or autumn-js/next, autumn-js/fetch, autumn-js/express
+import { autumnHandler } from "autumn-js/hono";
 
-app.all("/api/autumn/*", (c) =>
-  autumnHandler({
-    identify: async () => {
-      const user = getAuthUser(c);
-      return { customerId: user.id };
-    },
-  })(c)
-);
+app.all("/api/autumn/*", autumnHandler({
+  identify: async (c) => {
+    const user = getAuthUser(c);
+    return { customerId: user.id };
+  },
+}));
 ```
 
 ## CLI Commands (atmn@1.1.8)

@@ -7,6 +7,8 @@ description: Implement Better Auth authentication for this stack, including serv
 
 We use [Better Auth](https://www.better-auth.com) for authentication.
 
+**Pinned version:** `better-auth@1.4.22`. Do not upgrade to 1.5.x — it breaks `autumn-js`.
+
 Reference docs: [llms.txt](https://www.better-auth.com/llms.txt)
 
 <preflight>
