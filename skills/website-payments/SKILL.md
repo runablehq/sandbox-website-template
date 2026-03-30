@@ -108,22 +108,18 @@ export default {
 
 ## 4. Frontend Access
 
-Use `useCustomer` from `autumn-js/react`. The `data` object contains the customer's active subscriptions, purchases, and balances — always get plan info from Autumn, not from the database.
+Use `useCustomer` for customer state. Get plan info from Autumn, not from the database.
 
 ```tsx
 import { useCustomer } from "autumn-js/react";
 
-function MyComponent() {
-  const { data: customer, isLoading } = useCustomer();
-  if (isLoading) return <div>Loading...</div>;
+const { data: customer, isLoading } = useCustomer();
 
-  // Active subscriptions (plan info)
-  const activePlans = customer?.subscriptions ?? [];
-  // Feature balances (usage info)
-  const balances = customer?.balances ?? {};
+// Active plan
+const activePlan = customer?.subscriptions?.[0]?.planId ?? "free";
 
-  return <div>Plan: {activePlans[0]?.planId ?? "none"}</div>;
-}
+const msgBalance = customer?.balances?.["messages"];
+// msgBalance.remaining, msgBalance.granted, msgBalance.usage, msgBalance.unlimited
 ```
 
 ## 5. Listing Plans & Prices
