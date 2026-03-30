@@ -46,7 +46,9 @@ export const auth = betterAuth({
 
 ## 3. Autumn Config
 
-Create `autumn.config.ts` in project root:
+Create `autumn.config.ts` in project root.
+
+> `reset` and `price` are mutually exclusive on `item()` — but consumable metered features **must have one of them**. `included` must be >= 0 (never use -1). For unlimited, use `unlimited: true`.
 
 ```ts
 import { feature, plan, item } from "atmn";
@@ -104,15 +106,21 @@ export default {
 
 ## 4. Frontend Access
 
-Use `useCustomer` from `autumn-js/react`:
+Use `useCustomer` from `autumn-js/react`. The `data` object contains the customer's active subscriptions, purchases, and balances — always get plan info from Autumn, not from the database.
 
 ```tsx
 import { useCustomer } from "autumn-js/react";
 
 function MyComponent() {
-  const { customer } = useCustomer();
-  console.log("Autumn customer:", customer);
-  return <div>Welcome!</div>;
+  const { data: customer, isLoading } = useCustomer();
+  if (isLoading) return <div>Loading...</div>;
+
+  // Active subscriptions (plan info)
+  const activePlans = customer?.subscriptions ?? [];
+  // Feature balances (usage info)
+  const balances = customer?.balances ?? {};
+
+  return <div>Plan: {activePlans[0]?.planId ?? "none"}</div>;
 }
 ```
 
@@ -151,7 +159,7 @@ const autumn = new Autumn();
 
 // Check — verify if customer has enough balance before allowing access
 // result.allowed: boolean, result.balance: { remaining, granted, usage, unlimited }
-const result = await autumn.customers.check({
+const result = await autumn.check({
   customerId: "user_id",
   featureId: "messages",
   requiredBalance: 1,          // minimum balance needed (default: 1)
