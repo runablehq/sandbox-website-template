@@ -126,7 +126,17 @@ function MyComponent() {
 }
 ```
 
-## 5. Checkout (Plan Attach)
+## 5. Listing Plans & Prices
+
+Use `useListPlans` to fetch plans with prices from Autumn — never hardcode prices.
+
+```tsx
+import { useListPlans } from "autumn-js/react";
+
+const { data: plans, isLoading } = useListPlans();
+```
+
+## 6. Checkout (Plan Attach)
 
 v2 uses `attach()` — redirects to Stripe hosted checkout.
 
@@ -151,7 +161,7 @@ function PurchaseButton() {
 }
 ```
 
-## 5. Backend Check & Track
+## 7. Backend Check & Track
 
 SDK reads `AUTUMN_SECRET_KEY` from env automatically:
 
@@ -176,7 +186,7 @@ await autumn.track({
 });
 ```
 
-## 6. Backend Handler (autumnHandler)
+## 8. Backend Handler (autumnHandler)
 
 For non-Better-Auth setups, mount `autumnHandler`:
 
