@@ -1,9 +1,4 @@
----
-name: website-ai-agent
-description: Build AI SDK ToolLoopAgent flows with OpenAI-compatible endpoints, backend routes, tools, and React chat UI integration.
----
-
-# Setup AI Agent
+# AI Agent
 
 We use [AI SDK](https://v6.ai-sdk.dev) with OpenAI-compatible endpoints for AI agents.
 

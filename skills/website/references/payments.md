@@ -1,9 +1,4 @@
----
-name: website-payments
-description: Integrate Autumn payments and usage tracking with Better Auth, frontend checkout, and backend feature/usage checks.
----
-
-# Setup Payments
+# Payments
 
 We use [Autumn](https://useautumn.com) for payments and usage tracking.
 

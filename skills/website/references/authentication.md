@@ -1,9 +1,4 @@
----
-name: website-authentication
-description: Implement Better Auth authentication for this stack, including server config, middleware, auth client, and sign-in/sign-up pages.
----
-
-# Setup Authentication
+# Authentication
 
 We use [Better Auth](https://www.better-auth.com) for authentication.
 

@@ -1,6 +1,6 @@
 ---
 name: website
-description: Use for any website creation task — planning, designing, implementing pages, components, API routes, and delivering.
+description: Use for any website creation task — planning, designing, implementing pages, components, API routes, and delivering. Includes authentication, payments, email, SEO, analytics, and AI agent capabilities as optional modules.
 ---
 
 # Website
@@ -23,12 +23,23 @@ Any non-managed stack (Python/Flask, Node/Express, static HTML, Ruby/Rails, etc.
 
 Do not start implementation until the user approves or adjusts the plan.
 
+## Design Guidelines
+
+Document design direction in `design.md` inside the website project directory before writing UI code. Reference it throughout for consistency.
+
+- **Typography**: distinctive, characterful fonts — never Inter, Roboto, Arial, system fonts. Pair display + body. Hierarchy through size/weight. Generous line height.
+- **Color**: dominant color with sharp accents. CSS variables + Tailwind. Accents for emphasis, not decoration.
+- **Layout**: asymmetric, overlapping, grid-breaking. Generous negative space or controlled density — intentionally.
+- **Backgrounds**: gradient meshes, noise textures, geometric patterns, layered transparencies. Match the aesthetic.
+- **Motion**: one well-orchestrated page load with staggered reveals > scattered micro-interactions. CSS-only for HTML, Motion library for React.
+- **Anti-patterns** (will look bad): purple gradients on white, predictable card grids with rounded corners, cookie-cutter layouts, overused fonts (Inter, Space Grotesk, Roboto).
+
 ## Managed Workflow
 
 1. Run preflight.
 2. Call `website_init` with absolute `website_path`, `name`, `description`. **Do NOT create the directory beforehand** — `website_init` creates it and fails if it already exists.
 3. Read `README.md` in the created directory for project structure and tech reference.
-4. Write `design.md` in the project root with the design direction from preflight (fonts, colors, spacing, style). See [design guidelines](./design.md) for reference. This file guides all UI code for consistency.
+4. Write `design.md` in the project root with the design direction from preflight (fonts, colors, spacing, style). This file guides all UI code for consistency.
 5. Build pages, components, API routes, database schema.
 6. Call `deliver` with `type: managed-website`, website folder path at index 0.
 
@@ -47,9 +58,16 @@ Preview runs in tmux session `port_<port>` (port in `website.config.json`).
 2. Build with whatever stack they want. Start dev server on a port.
 3. Call `deliver` with `type: unmanaged-website`, project folder path, and `port`.
 
-## Design Guidelines
+## Optional Capabilities
 
-See [design.md](./design.md) for full design guidelines. Write a `design.md` in each project after `website_init` to document fonts, colors, spacing, and style before writing UI code.
+For optional capabilities, consult the matching reference before implementation:
+
+- Authentication: [references/authentication.md](references/authentication.md)
+- Payments: [references/payments.md](references/payments.md)
+- Email: [references/email.md](references/email.md)
+- SEO: [references/seo.md](references/seo.md)
+- Analytics: [references/analytics.md](references/analytics.md)
+- AI agent flows: [references/ai-agent.md](references/ai-agent.md)
 
 ## Testing
 

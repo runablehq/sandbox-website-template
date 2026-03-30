@@ -1,9 +1,4 @@
----
-name: website-email
-description: Send transactional emails from the website backend using the Runable email service via sendEmail from @runablehq/website-runtime/server.
----
-
-# Send Emails
+# Email
 
 We use the Runable email service to send transactional emails from the website backend.
 

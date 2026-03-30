@@ -1,9 +1,4 @@
----
-name: website-analytics
-description: Set up Runable Analytics tracking in this project. Use when adding page views, event tracking, or analytics hooks in React components.
----
-
-# Setup Analytics
+# Analytics
 
 We use [Runable Analytics](https://onedollarstats.com) for privacy-friendly website analytics.
 
