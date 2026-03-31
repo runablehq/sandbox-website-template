@@ -71,4 +71,12 @@ For optional capabilities, consult the matching reference before implementation:
 
 ## Testing
 
-Before delivering, verify the site works. Check the preview server is running, visit key pages with `mb`, and confirm no console errors or broken layouts. Don't deliver a broken site.
+Before calling `deliver`, you must verify the site loads and renders correctly.
+
+1. Confirm the preview server is running (check the tmux session).
+2. Use `mb` to visit key pages — the ones most likely to break (pages with dynamic data). Skip pages you wrote from scratch and are confident about.
+3. Look for: console errors, broken layouts, missing assets, dead links.
+
+**`mb` is slow and expensive.** Never call it more than once per page. Do not revisit a page you already checked. If a page rendered fine, move on.
+
+Do not call `deliver` on a broken site. Fix it first.
